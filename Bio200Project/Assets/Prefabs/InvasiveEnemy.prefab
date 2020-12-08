@@ -47,6 +47,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58683a6e0e9fb7a4cac20bbf3831ee9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemySpeak: {fileID: 8300000, guid: e2beefeb2273f4efe992adf5b8d67c29, type: 3}
+  enemyBite: {fileID: 8300000, guid: 1cb61f83d60374c7389bb547431919e3, type: 3}
   hostileSpeed: 3
 --- !u!212 &2996355183327219673
 SpriteRenderer:

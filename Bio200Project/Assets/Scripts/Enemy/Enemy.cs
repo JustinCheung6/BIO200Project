@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    [Header("Sounds")]
+    [SerializeField] protected AudioClip enemySpeak = null;
+    [SerializeField] protected AudioClip enemyBite = null;
+    [Header("Speed")]
     [SerializeField] protected float hostileSpeed = 7f;
 
     protected Vector3 MoveToPlayer()
@@ -24,6 +28,7 @@ public class Enemy : MonoBehaviour
     {
         if (c.gameObject.tag == "Player")
         {
+            AudioManager.singleton.Src.PlayOneShot(enemyBite);
             DeathManager.singleton.DeathOccurrence();
         }
     }

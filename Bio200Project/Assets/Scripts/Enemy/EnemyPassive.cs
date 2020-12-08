@@ -103,6 +103,8 @@ public class EnemyPassive : Enemy
     private void SetHostility(bool value)
     {
         isHostile = value;
+        if(value)
+            AudioManager.singleton.Src.PlayOneShot(enemySpeak, 0.1f);
     }
 
     private void PlayerDeath()

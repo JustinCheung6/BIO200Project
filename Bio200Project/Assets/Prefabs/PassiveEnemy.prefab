@@ -128,6 +128,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f52f06a2787e949479b1ebb24cc8fb44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemySpeak: {fileID: 8300000, guid: 0db8cac2749584a009540aa5671ee80d, type: 3}
+  enemyBite: {fileID: 8300000, guid: 1cb61f83d60374c7389bb547431919e3, type: 3}
   hostileSpeed: 2
   idleSpeed: 1
 --- !u!212 &7776756861050859886
