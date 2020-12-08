@@ -4,15 +4,28 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 5f;
+    private static PlayerMovement _singleton = null;
+    public static PlayerMovement singleton { get => _singleton; }
 
     //Movement
+    [SerializeField] private float moveSpeed = 5f;
     private float hor = 0f, ver = 0f;
 
     //Animation
     private Animator anim = null;
     private SpriteRenderer spriteRenderer = null;
 
+    //Collision
+    [SerializeField] private bool hidden = false;
+    public bool Hidden { get => hidden; set => hidden = value; }
+
+    private void Awake()
+    {
+        if (_singleton == null)
+            _singleton = this;
+        else if (_singleton != this)
+            Debug.Log("Multiple PlayerMovement Scripts found");
+    }
     private void Start()
     {
         anim = GetComponentInChildren<Animator>();
