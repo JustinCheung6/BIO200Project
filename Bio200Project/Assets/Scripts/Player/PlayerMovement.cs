@@ -19,6 +19,17 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private bool hidden = false;
     public bool Hidden { get => hidden; set => hidden = value; }
 
+    //Other
+    public bool playerDied = false;
+
+    private void OnEnable()
+    {
+        DeathManager.DeathOccurred += KillPlayer;
+    }
+    private void OnDisable()
+    {
+        DeathManager.DeathOccurred -= KillPlayer;
+    }
     private void Awake()
     {
         if (_singleton == null)
@@ -34,6 +45,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        if (playerDied)
+            return;
         //Get input from player
         hor = Input.GetAxis("Horizontal");
         ver = Input.GetAxis("Vertical");
@@ -41,6 +54,9 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (playerDied)
+            return;
+
         Vector3 inputMovement = new Vector3(hor, ver, 0) * moveSpeed;
         UpdateAnimation(hor, ver);
 
@@ -53,5 +69,12 @@ public class PlayerMovement : MonoBehaviour
             spriteRenderer.flipX = (xMove < 0);
 
         anim.SetBool("Moving", (xMove != 0 || yMove != 0) );
+    }
+    
+    private void KillPlayer()
+    {
+        playerDied = true;
+        GetComponent<BoxCollider2D>().isTrigger = false;
+        anim.SetTrigger("DeD");
     }
 }

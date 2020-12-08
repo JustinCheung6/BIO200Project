@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyMovement : MonoBehaviour
+public class EnemyPassive : Enemy
 {
     private SpriteRenderer enemySprite = null;
 
     [SerializeField] private float idleSpeed = 3f;
-    [SerializeField] private float hostileSpeed = 7f;
 
     //Follows idle movement if false. Follows player if true
     private bool isHostile = false;
@@ -20,11 +19,14 @@ public class EnemyMovement : MonoBehaviour
     private void OnEnable()
     {
         PlayerHide.PassifyEnemies += TurnOffHostility;
+        DeathManager.DeathOccurred += PlayerDeath;
     }
     private void OnDisable()
     {
         if (PlayerHide.PassifyEnemies != null)
             PlayerHide.PassifyEnemies -= TurnOffHostility;
+        if(DeathManager.DeathOccurred != null)
+            DeathManager.DeathOccurred -= PlayerDeath;
     }
 
     void Start()
@@ -39,7 +41,6 @@ public class EnemyMovement : MonoBehaviour
 
         direction = (destination.x != start.x) ? ((start.x < destination.x) ? new Vector3(1, 0, 0) : new Vector3(-1, 0, 0)) :
             ((start.y < destination.y) ? new Vector3(0, 1, 0) : new Vector3(0, -1, 0));
-
     }
     private void FixedUpdate()
     {
@@ -48,7 +49,15 @@ public class EnemyMovement : MonoBehaviour
         if (isHostile)
             moveSpeed = MoveToPlayer();
         else
-            moveSpeed = idleSpeed * direction * Time.fixedDeltaTime;
+        {
+            Vector3 offset = (destination.x == start.x && transform.position.x > start.x) ? new Vector3(-1, 0, 0) :
+                (destination.x == start.x && transform.position.x < start.x) ? new Vector3(1, 0, 0) :
+                (destination.y == start.y && transform.position.y > start.y) ? new Vector3(0, -1, 0) :
+                (destination.y == start.y && transform.position.y < start.y) ? new Vector3(0, 1, 0) : Vector3.zero;
+
+            moveSpeed = idleSpeed * (direction + offset) * Time.fixedDeltaTime;
+        }
+            
 
         enemySprite.flipX = (moveSpeed.x > 0) ? false : (moveSpeed.x < 0) ? true : enemySprite.flipX;
 
@@ -68,29 +77,6 @@ public class EnemyMovement : MonoBehaviour
             destination = start;
             start = transform.position;
         }
-    }
-
-    private Vector3 MoveToPlayer()
-    {
-        Vector3 pp = PlayerMovement.singleton.transform.position;
-
-        Vector3 finalSpeed = new Vector3(0, 0, 0);
-
-        float aTan = Mathf.Atan((pp.y - transform.position.y) / (pp.x - transform.position.x));
-
-        /*
-        if(direction.x == 1 && direction.y == -1)
-            aTan -= (Mathf.PI * 1.5f);
-        else if(direction.x == -1 && direction.y == -1)
-            aTan -= (Mathf.PI);
-        else if (direction.x == -1 && direction.y == 1)
-            aTan -= (Mathf.PI *0.5f);
-        */
-        float hypotenuse = hostileSpeed * Time.fixedDeltaTime;
-        Vector2 direction = new Vector2((transform.position.x > pp.x) ? -1 : (transform.position.x < pp.x) ? 1 : 0,
-    (transform.position.y > pp.y) ? -1 : (transform.position.y < pp.y) ? 1 : 0);
-
-        return new Vector3(Mathf.Abs(Mathf.Cos(aTan) * hypotenuse) * direction.x, Mathf.Abs(Mathf.Sin(aTan) * hypotenuse) * direction.y, 0f);
     }
 
     private void OnTriggerStay2D(Collider2D c)
@@ -117,5 +103,10 @@ public class EnemyMovement : MonoBehaviour
     private void SetHostility(bool value)
     {
         isHostile = value;
+    }
+
+    private void PlayerDeath()
+    {
+        GetComponent<BoxCollider2D>().isTrigger = false;
     }
 }
