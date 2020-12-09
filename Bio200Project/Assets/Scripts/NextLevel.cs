@@ -5,6 +5,21 @@ using UnityEngine.SceneManagement;
 
 public class NextLevel : MonoBehaviour
 {
+    /*
+    private void Update()
+    {
+        if (Input.GetKeyDown("="))
+        {
+            if (SceneManager.GetSceneByBuildIndex(SceneManager.GetActiveScene().buildIndex + 1) != null)
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        }
+        else if (Input.GetKeyDown("-"))
+        {
+            if (SceneManager.GetSceneByBuildIndex(SceneManager.GetActiveScene().buildIndex - 1) != null)
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+        }
+    }
+    */
     private void OnCollisionEnter2D(Collision2D c)
     {
         if(c.gameObject.tag == "Player")

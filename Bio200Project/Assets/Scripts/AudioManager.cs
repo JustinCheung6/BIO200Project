@@ -22,5 +22,13 @@ public class AudioManager : MonoBehaviour
     {
         src = GetComponent<AudioSource>();
     }
+    /*
+    private void Update()
+    {
+        //Mute 
+        if (Input.GetKeyDown(KeyCode.KeypadPlus))
+            src.enabled = !src.enabled;
+    }
+    */
 }
 
